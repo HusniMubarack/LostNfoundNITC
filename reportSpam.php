@@ -1,0 +1,41 @@
+<?php
+session_start();
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db="SEPROJ";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $db);
+
+//Check connection
+// if ($conn) {
+// 	echo "Connected-successfully";
+// }
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+$ind=''.array_keys($_POST)[0];
+$vname=','.$_SESSION['user_id'].',';
+$refno = filter_var($ind, FILTER_SANITIZE_NUMBER_INT);
+if (strpos($ind, 'Yes') !== false) {
+
+    $sql= "UPDATE Blog SET spamcount=spamcount+1,vote = CONCAT(vote, '".$vname."')  WHERE refno=".$refno;
+    if($conn->query($sql)===TRUE)
+    {
+        echo 'Marked as Spam';
+    }
+}
+else {
+  $sql= "UPDATE Blog SET vote = CONCAT(vote, '".$vname."')  WHERE refno=".$refno;
+  if($conn->query($sql)===TRUE)
+  {
+      echo 'Thanks for voting';
+  }
+}
+ ?>
+
+ <br />
+ <br />
+ <a href="index.php">Back to feed</a>
